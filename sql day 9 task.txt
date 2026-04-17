@@ -1,0 +1,144 @@
+#01 basic select & where
+mysql> select * from products;
++------+-----------+-------+-------------+-------+
+| id   | name      | price | category    | stock |
++------+-----------+-------+-------------+-------+
+|    1 | laptob    | 45000 | electronics |    10 |
+|    2 | t-shirt   |   799 | clothing    |    50 |
+|    3 | headphone |  2500 | electronics |    30 |
+|    4 | jeans     |  1499 | clothing    |    20 |
+|    5 | keyboard  |  1800 | electronics |    15 |
+|    6 | jacket    |  3200 | clothing    |     8 |
++------+-----------+-------+-------------+-------+
+6 rows in set (0.23 sec)
+
+mysql> select name,price from products where category="electronics";
++-----------+-------+
+| name      | price |
++-----------+-------+
+| laptob    | 45000 |
+| headphone |  2500 |
+| keyboard  |  1800 |
++-----------+-------+
+3 rows in set (0.06 sec)
+=================================================================================
+#02 order by & limit
+
+mysql> select name,price from products order by price desc limit 3;
++-----------+-------+
+| name      | price |
++-----------+-------+
+| laptob    | 45000 |
+| jacket    |  3200 |
+| headphone |  2500 |
++-----------+-------+
+3 rows in set (0.00 sec)
+
+mysql> select name,price from products order by price asc limit 2;
++---------+-------+
+| name    | price |
++---------+-------+
+| t-shirt |   799 |
+| jeans   |  1499 |
++---------+-------+
+2 rows in set (0.00 sec)
+
+mysql> select name,price from products where category="electronics" order by price desc;
++-----------+-------+
+| name      | price |
++-----------+-------+
+| laptob    | 45000 |
+| headphone |  2500 |
+| keyboard  |  1800 |
++-----------+-------+
+3 rows in set (0.00 sec)
+
+==============================================================================
+#03 aggregate function
+mysql> select count(*),sum(price),avg(price),max(price),min(price) from products;
++----------+------------+------------+------------+------------+
+| count(*) | sum(price) | avg(price) | max(price) | min(price) |
++----------+------------+------------+------------+------------+
+|        6 |      54798 |  9133.0000 |      45000 |        799 |
++----------+------------+------------+------------+------------+
+1 row in set (0.03 sec)
+
+mysql> select count(*),avg(price) from products where category="clothing";
++----------+------------+
+| count(*) | avg(price) |
++----------+------------+
+|        3 |  1832.6667 |
++----------+------------+
+1 row in set (0.00 sec)
+
+mysql> select avg(price),sum(price)/6 from products;
++------------+--------------+
+| avg(price) | sum(price)/6 |
++------------+--------------+
+|  9133.0000 |    9133.0000 |
++------------+--------------+
+1 row in set (0.03 sec)
+mysql> select sum(price)/3 from products where category="clothing" or category="electronics";
++--------------+
+| sum(price)/3 |
++--------------+
+|   18266.0000 |
++--------------+
+1 row in set (0.01 sec)
+===========================================================================================
+#05 where with multiple conditions
+mysql> select name,stock from products where category="electronics" and stock>10;
++-----------+-------+
+| name      | stock |
++-----------+-------+
+| headphone |    30 |
+| keyboard  |    15 |
++-----------+-------+
+2 rows in set (0.00 sec)
+
+mysql> select name,price from products order by category="clothing" asc limit 3;
++-----------+-------+
+| name      | price |
++-----------+-------+
+| laptob    | 45000 |
+| headphone |  2500 |
+| keyboard  |  1800 |
++-----------+-------+
+3 rows in set (0.00 sec)
+
+mysql> select name,price,category from products where category="electronics" or price<1000;
++-----------+-------+-------------+
+| name      | price | category    |
++-----------+-------+-------------+
+| laptob    | 45000 | electronics |
+| t-shirt   |   799 | clothing    |
+| headphone |  2500 | electronics |
+| keyboard  |  1800 | electronics |
++-----------+-------+-------------+
+4 rows in set (0.00 sec)
+========================================================================================
+#04 group by
+mysql> select category,count(*),avg(price) from products  group by category;
++-------------+----------+------------+
+| category    | count(*) | avg(price) |
++-------------+----------+------------+
+| clothing    |        3 |  1832.6667 |
+| electronics |        3 | 16433.3333 |
++-------------+----------+------------+
+2 rows in set (0.00 sec)
+
+mysql> select category,max(price) from products  group by category;
++-------------+------------+
+| category    | max(price) |
++-------------+------------+
+| clothing    |       3200 |
+| electronics |      45000 |
++-------------+------------+
+2 rows in set (0.00 sec)
+mysql> select sum(price)/3 from products where category="clothing" or category="electronics";
++--------------+
+| sum(price)/3 |
++--------------+
+|   18266.0000 |
++--------------+
+1 row in set (0.01 sec)
